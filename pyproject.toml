@@ -9,6 +9,7 @@ python = "^3.9"
 pynautobot = "^1.0.4"
 python-dotenv = "^0.20.0"
 napalm = "^3.4.0"
+gevent = "^21.12.0"
 
 [tool.poetry.dev-dependencies]
 

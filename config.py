@@ -26,5 +26,5 @@ device_platform_connection = {
     "cisco_nxos": {"os": "nxos"},
     "cisco_iosxe": {"os": "ios"},
     "cisco_ios" : {"os": "ios"},
-    'cisco_xr' : {"os": "iosxr"}
+    "cisco_xr" : {"os": "iosxr"}
 }
