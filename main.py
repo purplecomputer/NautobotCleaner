@@ -95,6 +95,7 @@ class NautobotCleaner:
 
 
 if __name__ == "__main__":
-    test = NautobotCleaner()
-    print(test.getvlans("dsc121.gsc.webair.net"))
+    nbc = NautobotCleaner()
+    vlan_data = nbc.getvlans('dsc121.gsc.webair.net')
+    nbc.nautobotvlanimport('ds121', vlan_data)
 
