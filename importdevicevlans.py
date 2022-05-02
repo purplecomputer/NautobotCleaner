@@ -144,9 +144,9 @@ class NautobotCleaner:
         if vlangroup is None:
             vlangroup = self.pynb.ipam.vlan_groups.create(
                 name=str(group),
-                site=device.site
+                site=device.site.id,
+                slug=str(group).lower()
             )
-
         tenant_group = self.pynb.tenancy.tenants.get(name=f'{device.site.slug}-dia')
         if tenant_group is None:
             tenant_group = self.pynb.tenancy.tenants.create(
@@ -211,6 +211,7 @@ class NautobotCleaner:
             #grab the ip and turn it into a prefix
             prefix_obj = ipaddress.ip_network(ips, strict=False)
             prefix = self.pynb.ipam.prefixes.get(prefix=prefix_obj.with_prefixlen)
+            #add code to create prefix if it doesnt exsist?
             print(f"trying to link prefix {prefix} to ID {vlan_nb_id}")
             prefix.update({
                 'vlan': vlan_nb_id
@@ -223,6 +224,8 @@ class NautobotCleaner:
         if 'cisco_iosxe' in device_object.platform.slug:
             print('IOS XE - Just parsing Portchannels for VLANS')
             self._parseportchannelvlans(device,group)
+            print(f"Linking SVIs to VLAN Objects for {device_object.name}")
+            self._linkSVItoImportVlan(group, device)
             print(f'''IPv6 Houskeeping on {device_object.name}''')
             self._getipv6(device_object.name)
         elif 'l2' in device_object.name:
@@ -240,8 +243,9 @@ class NautobotCleaner:
                 })
             for interface, vlan in vlans.items():
                 '''query interface object'''
+                print(interface)
                 interfaceQuery = self.pynb.dcim.interfaces.get(
-                    name=str(interface),
+                    name__ie=str(interface),
                     device_id=device_object.id
                 )
                 if interfaceQuery is None:

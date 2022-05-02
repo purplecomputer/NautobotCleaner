@@ -6,14 +6,23 @@ import pprint
 
 if __name__ == "__main__":
     nbc = NautobotCleaner()
+    nbc.importdevicevlans(selected_devices=[
+        'tgb090.chi.webair.net',
+        'tgb091.chi.webair.net',
+        # 'es0.chi.webair.net',
+        # 'es1.chi.webair.net',
+    ],
+        group='chi-l3')
     # nbc.importdevicevlans(selected_devices=[
-    #     'tgb090.chi.webair.net',
-    #     'tgb091.chi.webair.net',
-    #     'es0.chi.webair.net',
-    #     'es1.chi.webair.net',
+    #     'cs1-l2.chi.webair.net',
+    #     'cs0-l2.chi.webair.net'
     # ],
-    #     group='chi-l3')
-    nbc.importdevicevlans(selected_devices=['cs1-l2.chi.webair.net'],
-                          group='chi-l2')
+    #     group='chi-l2')
+    # nbc.importdevicevlans(selected_devices=[
+    #     'san0.chi.webair.net',
+    #     'san1.chi.webair.net'
+    # ],
+    #     group='chi-san'
+    #)
 
 
