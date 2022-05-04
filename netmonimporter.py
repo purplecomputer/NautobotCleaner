@@ -8,7 +8,7 @@ import sys
 import napalm
 import pynautobot
 
-class NetmonImporter:
+class NautobotCleanerNetmonImport:
     def __init__(self):
         self.pynb = pynautobot.api(nautobot_url, token=nautobot_token)
 

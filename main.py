@@ -3,11 +3,17 @@
 
 from importdevicevlans import NautobotCleanerVlans
 from importdeviceroutes import NautobotCleanerRoutes
+from netmonimporter import NautobotCleanerNetmonImport
 import pprint
 
 if __name__ == "__main__":
+    nbn = NautobotCleanerNetmonImport()
     nbv = NautobotCleanerVlans()
     nbr = NautobotCleanerRoutes()
+    #Build device inventory
+    nbn.add_device_to_nautobot(deviceGroup=[
+        'Webair_Edge'
+    ])
     #IMPORTING VLANS
     nbv.importdevicevlans(selected_devices=[
         'tgb090.chi.webair.net',

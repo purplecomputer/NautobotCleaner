@@ -6,13 +6,10 @@ Cleaner isnt the best word, but it helps to import data that network importer do
 
 ### How it works?
 
-Uses a mix of Napalm and Netmiko to parse vlan information and create it in Nautobot
-
-### How to use?
-
-Instantiate the class and pass in selected devices and vlan group
+Uses a mix of Napalm and Netmiko to parse vlan & static route information and create it in Nautobot
 
 ## Importing VLANs
+
 ```python
 from importdevicevlans import NautobotCleanerVlans
 
@@ -82,3 +79,23 @@ q1-->a3['Create or Update prefix object in Nautobot']
 q2-->a4['Return none']
 
 ```
+
+## Importing from LibreNMS
+
+This function just pulls the device information based on groups from Librenms to populate Nautobot
+
+Instatiate the class and run the method. Currently it expect a group name from Librensm. It must match!
+
+```python
+from netmonimporter import NautobotCleanerNetmonImport
+
+nbn = NautobotCleanerNetmonImport()
+
+nbn.add_device_to_nautobot(deviceGroup=[
+        'ACME_ROUTERS'
+    ])
+```
+
+part of the inventory build is to match the mgmt interface that the resolved IP of the FQDN uses to its interface. 
+This is needed as it is important to stage this for the Network Imported from Network To Code
+
