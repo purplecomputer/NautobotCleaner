@@ -12,12 +12,12 @@ Uses a mix of Napalm and Netmiko to parse vlan information and create it in Naut
 
 Instantiate the class and pass in selected devices and vlan group
 
-
+## Importing VLANs
 ```python
-from importdevicevlans import NautobotCleaner
+from importdevicevlans import NautobotCleanerVlans
 
-nbc = NautobotCleaner()
-nbc.importdevicevlans(selected_devices=[
+nbv = NautobotCleanerVlans()
+nbv.importdevicevlans(selected_devices=[
     'device1-fqdn',
     'device2-fqdn',
 ],
@@ -52,4 +52,33 @@ q2-->c1['Pull VLANS from device DB']
 c1-->c2['reverse getvlan dict']
 c2-->c3['create vlans, assign to group and link to interface']
 c3-->c4['link VLAN to SVI and prefix']
+```
+
+## Importing Static routes
+
+We are using the devices static route table to import prefixes direclty into Nautobot.
+
+To use, import and instatiate, then call the method as such
+
+```Python
+from importdeviceroutes import NautobotCleanerRoutes
+
+nbr = NautobotCleanerRoutes()
+nbr.importdevicestaticroutes(selected_devices=[
+        'router1.acme.com',
+        'router2.acme.com',
+    ])
+```
+
+```mermaid
+graph TD
+
+s['start']
+s-->a1['Login and pull route table']
+a1-->a2['iterate over prefixes and check if it is valid']
+a2-->q1['prefix is valid']
+a2-->q2['prefix is not valid']
+q1-->a3['Create or Update prefix object in Nautobot']
+q2-->a4['Return none']
+
 ```

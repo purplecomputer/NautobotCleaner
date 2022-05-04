@@ -14,6 +14,10 @@ except:
 nautobot_url = os.environ['NAUTOBOT_URL']
 nautobot_token = os.environ['NAUTOBOT_TOKEN']
 
+#netmon
+netmon_url = os.environ['NETMON_URL']
+netmon_token = os.environ['NETMON_TKN']
+
 #NETOPS
 netops_url = os.environ['NAUTOBOT_URL']
 

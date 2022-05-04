@@ -1,26 +1,25 @@
 #Angelo.Poggi - Angelo.Poggi@opti9tech.com
 #(c) Opti9 Tech
 
-from importdevicevlans import NautobotCleaner
+from importdevicevlans import NautobotCleanerVlans
+from importdeviceroutes import NautobotCleanerRoutes
 import pprint
 
 if __name__ == "__main__":
-    nbc = NautobotCleaner()
-    nbc.importdevicevlans(selected_devices=[
+    nbv = NautobotCleanerVlans()
+    nbr = NautobotCleanerRoutes()
+    #IMPORTING VLANS
+    nbv.importdevicevlans(selected_devices=[
         'tgb090.chi.webair.net',
         'tgb091.chi.webair.net',
         # 'es0.chi.webair.net',
         # 'es1.chi.webair.net',
     ],
         group='chi-l3')
-    # nbc.importdevicevlans(selected_devices=[
-    #     'cs1-l2.chi.webair.net',
-    #     'cs0-l2.chi.webair.net'
-    # ],
-    #     group='chi-l2')
-    # nbc.importdevicevlans(selected_devices=[
-    #     'san0.chi.webair.net',
-    #     'san1.chi.webair.net'
-    # ],
-    #     group='chi-san'
-    #)
+    #IMPORTING STATIC ROUTES
+    nbr.importdevicestaticroutes(selected_devices=[
+        'es0.chi.webair.net',
+        'es1.chi.webair.net',
+        'tgb090.chi.webair.net',
+        'tgb091.chi.webair.net'
+    ])

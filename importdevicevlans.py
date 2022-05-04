@@ -8,7 +8,7 @@ import gevent.pool
 import ipaddress
 from netmiko import ConnectHandler
 
-class NautobotCleaner:
+class NautobotCleanerVlans:
     def __init__(self):
         '''creates a connection to nautobot and device during instantiation of class'''
         self.pynb = pynautobot.api(nautobot_url, token=nautobot_token)

@@ -3,6 +3,8 @@ from netmiko import ConnectHandler
 from config import nautobot_url, nautobot_token, device_platform_connection,device_username,device_password
 import pynautobot
 import ipaddress
+import gevent
+import gevent.pool
 
 class NautobotCleanerRoutes():
     def __init__(self):
@@ -79,11 +81,14 @@ class NautobotCleanerRoutes():
                         'tenant': device_object.tenant.id
                     })
 
+    def importdevicestaticroutes(self, selected_devices=[]):
+        if len(selected_devices) == 0:
+            raise('no devices given')
+        elif len(selected_devices) == 1:
+            self._getstaticroutes(selected_devices[0])
+        elif len(selected_devices) > 1:
+            gpool = gevent.pool.Pool(100)
+            for device in selected_devices:
+                gpool.spawn(self._getstaticroutes(device))
 
-
-if __name__ == "__main__":
-    nbc = NautobotCleanerRoutes()
-    nbc._getstaticroutes('es0.chi.webair.net')
-    nbc._getstaticroutes('es1.chi.webair.net')
-    nbc._getstaticroutes('es1.sg.webair.net')
 
