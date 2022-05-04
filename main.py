@@ -11,21 +11,40 @@ if __name__ == "__main__":
     nbv = NautobotCleanerVlans()
     nbr = NautobotCleanerRoutes()
     #Build device inventory
-    nbn.add_device_to_nautobot(deviceGroup=[
-        'Webair_Edge'
-    ])
+    # nbn.add_device_to_nautobot(deviceGroup=[
+    #     'Webair_Edge'
+    # ])
+    #run network Importer
     #IMPORTING VLANS
-    nbv.importdevicevlans(selected_devices=[
-        'tgb090.chi.webair.net',
-        'tgb091.chi.webair.net',
-        # 'es0.chi.webair.net',
-        # 'es1.chi.webair.net',
-    ],
-        group='chi-l3')
+    # nbv.importdevicevlans(selected_devices=[
+    #     'es0.chi.webair.net',
+    #     'es1.chi.webair.net',
+    # ],
+    #     group='chi-l3')
     #IMPORTING STATIC ROUTES
-    nbr.importdevicestaticroutes(selected_devices=[
-        'es0.chi.webair.net',
-        'es1.chi.webair.net',
-        'tgb090.chi.webair.net',
-        'tgb091.chi.webair.net'
-    ])
+    # nbr.importdevicestaticroutes(selected_devices=[
+    #     'es0.chi.webair.net',
+    #     'es1.chi.webair.net',
+
+    # ])
+    # nbv.importdevicevlans(selected_devices=[
+    #     'es0.sg.webair.net',
+    #     'es1.sg.webair.net',
+    # ],
+    #     group='sg-l3')
+    #IMPORTING STATIC ROUTES
+    # nbr.importdevicestaticroutes(selected_devices=[
+    #     'es0.sg.webair.net',
+    #     'es1.sg.webair.net',
+    # ])
+    # nbv.importdevicevlans(selected_devices=[
+    #     'es0.lon.webair.net',
+    #     'es1.lon.webair.net',
+    # ],
+    #     group='lon-l3')
+    #IMPORTING STATIC ROUTES
+    # nbr.importdevicestaticroutes(selected_devices=[
+    #     'es0.lon.webair.net',
+    #     'es1.lon.webair.net',
+    # ])
+

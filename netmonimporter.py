@@ -57,7 +57,7 @@ class NautobotCleanerNetmonImport:
             group = deviceGroup
         for groups in group:
             try:
-                api = self._self._netmon_connect(f'devicegroups/{groups}')
+                api = self._netmon_connect(f'devicegroups/{groups}')
             except Exception as e:
                 raise(f"Following error from Netmon: {e}")
             for devices in api['devices']:
@@ -90,7 +90,7 @@ class NautobotCleanerNetmonImport:
                         print(f"adding in {device['hostname']}")
                         deviceManufacturer = self.pynb.dcim.manufacturers.get(slug=manufacturer[0].lower().replace(" ", ""))
                         if deviceManufacturer is None:
-                            deviceManufacturer = self.pynbdcim.manufacturers.create({
+                            deviceManufacturer = self.pynb.dcim.manufacturers.create({
                                 'name': manufacturer[0].capitalize(),
                                 'slug': manufacturer[0].lower().replace(" ", "")
                             })
@@ -98,7 +98,7 @@ class NautobotCleanerNetmonImport:
                         #find the "device type or create it
                         deviceType = self.pynb.dcim.device_types.get(slug=device['hardware'].lower().replace(" ", ""))
                         if deviceType is None:
-                            deviceType = self.pynbdcim.device_types.create({
+                            deviceType = self.pynb.dcim.device_types.create({
                                 'manufacturer': deviceManufacturer.id,
                                 'model': device['hardware'].upper(),
                                 'slug' : device['hardware'].lower().replace(" ", "")
@@ -107,7 +107,7 @@ class NautobotCleanerNetmonImport:
                         #need to find deviceRole; if not create it!
                         deviceRole = self.pynb.dcim.device_roles.get(slug=group.lower().replace(" ", ""))
                         if deviceRole is None:
-                            deviceRole = self.pynbdcim.device_roles.create({
+                            deviceRole = self.pynb.dcim.device_roles.create({
                                 'name': group.capitalize(),
                                 'slug': group.lower().replace(" ", ""),
                                 'vm_role': False
@@ -123,7 +123,7 @@ class NautobotCleanerNetmonImport:
                                 'manufacturer' : deviceManufacturer.id,
                                 # Napalm just expects ios, nxos_ssh etc
                                 '''should query the dict in config file'''
-                                'napalm_driver' : device_platform_connection[devicePlatform['os']]
+                                'napalm_driver' : str(device_platform_connection[f'''cisco_{device['os']}'''])
                             })
 
                         #need to find location
@@ -140,15 +140,15 @@ class NautobotCleanerNetmonImport:
                         #     netopsMgmtPort = 22
                         # else:
                         #     netopsMgmtPort = 22
-                        try:
-                            ipQuery = self.pynb.ipam.ip_addresses.get(address=str(device['ip']))
-                            if ipQuery is None:
-                                ipQuery = self.pynb.ipam.ip_addresses.create({
-                                    'address':              str(device['ip']),
-                                    'status' : "active"
-                                })
-                        except Exception as e:
-                            print(f"Error adding in {device['ip']} due to this error {e}")
+                        # try:
+                        #     ipQuery = self.pynb.ipam.ip_addresses.get(address=str(device['ip']))
+                        #     if ipQuery is None:
+                        #         ipQuery = self.pynb.ipam.ip_addresses.create({
+                        #             'address':              str(device['ip']),
+                        #             'status' : "active"
+                        #         })
+                        # except Exception as e:
+                        #     print(f"Error adding in {device['ip']} due to this error {e}")
                         try:
                             deviceObj = self.pynb.dcim.devices.get(name=device['hostname'])
                             if deviceObj is None:
@@ -195,7 +195,8 @@ class NautobotCleanerNetmonImport:
                                     'type' : 'other',
                                 })
                         except Exception as e:
-                            print(e)
+                            print(f'issue loggig into {deviceObj.name} - partial information was imported')
+                            continue
                         #link IP to mgmt psudo int and set is as primary
                         try:
                             ipQuery = self.pynb.ipam.ip_addresses.get(address=str(device['ip']), interface_id=mgmtInt_obj.id, device_id=deviceObj.id)
@@ -205,6 +206,9 @@ class NautobotCleanerNetmonImport:
                                     'assigned_object_type' : 'dcim.interface',
                                     'assigned_object_id' : mgmtInt_obj.id,
                                     'status': 'active'
+                                })
+                                deviceObj.update({
+                                    'primary_ip4': ipQuery.id
                                 })
                             else:
                                 ipUpdate = {

@@ -43,11 +43,21 @@ class NautobotCleanerVlans:
         net_connect.find_prompt()
         output = net_connect.send_command('show interface', use_textfsm=True)
         vlan_group = self.pynb.ipam.vlan_groups.get(name=group)
+        if vlan_group is None:
+            vlan_group = self.pynb.ipam.vlan_groups.create(
+                name=group,
+                slug=group.lower(),
+                site=device.site.id
+            )
         tenant_group = self.pynb.tenancy.tenants.get(name=f'{device.site.slug}-dia')
         if tenant_group is None:
             tenant_group = self.pynb.tenancy.tenants.create(
                 name=f'{device.site.slug}-dia'
             )
+            '''Link the freshly created tenant group to the device'''
+            device.update({'tenant': tenant_group.id})
+        else:
+            device.update({'tenant': tenant_group.id})
         for data in output:
             if data['encapsulation'] == '802.1Q Virtual LAN':
                 vlan_obj = self.pynb.ipam.vlans.get(name=str(data['vlan_id']),
@@ -227,7 +237,7 @@ class NautobotCleanerVlans:
             print(f"Linking SVIs to VLAN Objects for {device_object.name}")
             self._linkSVItoImportVlan(group, device)
             print(f'''IPv6 Houskeeping on {device_object.name}''')
-            self._getipv6(device_object.name)
+            self._getipv6(device)
         elif 'l2' in device_object.name:
             print("Layer 2 device - only need VLANS")
             vlans = self._getvlans(device_object.name)
